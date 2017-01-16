@@ -1,0 +1,320 @@
+From c76ac61f475de292744d2d28147c3b3dacce2db0 Mon Sep 17 00:00:00 2001
+From: nikolayKipnyak <nikolay.kipnyak@extrawest.com>
+Date: Mon, 16 Jan 2017 13:21:11 +0200
+Subject: [PATCH] change calendar data by Class and by Year
+
+---
+ assets/fullcalendar.js           |  17 +++++-
+ assets/fullcalendar.js~          | 119 +++++++++++++++++++++++++++++++++++++++
+ controllers/GlobalController.php |   7 ++-
+ models/CalendarEntry.php         |  17 ++++--
+ views/global/index.php           |  31 ++++++++++
+ 5 files changed, 181 insertions(+), 10 deletions(-)
+ create mode 100644 assets/fullcalendar.js~
+
+diff --git a/assets/fullcalendar.js b/assets/fullcalendar.js
+index 25c33ee..ef9bee8 100644
+--- a/assets/fullcalendar.js
++++ b/assets/fullcalendar.js
+@@ -7,7 +7,7 @@ $(document).ready(function() {
+     } else {
+         fullCalendarCanWrite = true;
+     }
+-
++    console.log(fullCalendarLoadUrl.replace('-selectors-', fullCalendarSelectors));
+     var calendar = $('#calendar').fullCalendar({
+         timezone: fullCalendarTimezone,
+         lang: fullCalendarLanguage,
+@@ -26,7 +26,9 @@ $(document).ready(function() {
+             error: function() {
+                 //alert("loading error!");
+             }
++
+         },
++
+         selectable: fullCalendarCanWrite,
+         selectHelper: fullCalendarCanWrite,
+         select: function(start, end) {
+@@ -70,6 +72,9 @@ $(document).ready(function() {
+     $(".selectorCheckbox").click(function() {
+         reloadFullCalendar();
+     });
++    $(".spacesCheckbox").click(function() {
++        reloadFullCalendar();
++    });
+     $(".filterCheckbox").click(function() {
+ 
+         // Make sure responded / not resondend  filters are not checked
+@@ -91,6 +96,7 @@ $(document).ready(function() {
+ function reloadFullCalendar() {
+     fullCalendarSelector = "";
+     fullCalendarFilter = "";
++    fullCalendarSpaces = "";
+ 
+     $(".selectorCheckbox").each(function() {
+         if ($(this).prop( "checked" )) {
+@@ -102,13 +108,18 @@ function reloadFullCalendar() {
+             fullCalendarFilter += $(this).val() + ",";
+         }
+     });
+-
++     $(".spacesCheckbox").each(function() {
++        if ($(this).prop( "checked" )) {
++            fullCalendarSpaces += $(this).val() + ",";
++        }
++    });
+     var events = {
+         url: fullCalendarLoadUrl,
+         type: 'GET',
+         data: {
+             selectors: fullCalendarSelector,
+             filters: fullCalendarFilter,
++            spaces: fullCalendarSpaces,
+         }
+     };
+ 
+@@ -116,4 +127,4 @@ function reloadFullCalendar() {
+     $('#calendar').fullCalendar('addEventSource', events);
+     $('#calendar').fullCalendar('refetchEvents');
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/assets/fullcalendar.js~ b/assets/fullcalendar.js~
+new file mode 100644
+index 0000000..25c33ee
+--- /dev/null
++++ b/assets/fullcalendar.js~
+@@ -0,0 +1,119 @@
++$(document).ready(function() {
++
++    var jsonDateFormat = "YYYY-MM-DD HH:mm:ss";
++
++    if (fullCalendarCanWrite == 'false' || fullCalendarCanWrite == false) {
++        fullCalendarCanWrite = false;
++    } else {
++        fullCalendarCanWrite = true;
++    }
++
++    var calendar = $('#calendar').fullCalendar({
++        timezone: fullCalendarTimezone,
++        lang: fullCalendarLanguage,
++//        defaultView: 'agendaWeek',
++        defaultView: 'month',
++        aspectRatio: 1.5,
++        header: {
++            left: 'prev,next today',
++            center: 'title',
++            right: 'month,agendaWeek,agendaDay'
++        },
++        editable: fullCalendarCanWrite,
++        events: {
++            url: fullCalendarLoadUrl.replace('-selectors-', fullCalendarSelectors),
++            data: {selectors: fullCalendarSelectors, filters: fullCalendarFilters},
++            error: function() {
++                //alert("loading error!");
++            }
++        },
++        selectable: fullCalendarCanWrite,
++        selectHelper: fullCalendarCanWrite,
++        select: function(start, end) {
++            var editUrl = fullCalendarCreateUrl;
++            editUrl = editUrl.replace('-start-', encodeURIComponent(start.format(jsonDateFormat)));
++            editUrl = editUrl.replace('-end-', encodeURIComponent(end.format(jsonDateFormat)));
++            $('#globalModal').modal({
++                show: 'true',
++                //remote: editUrl
++            });
++            $('#globalModal').load(editUrl);
++            calendar.fullCalendar('unselect');
++        },
++        eventResize: function(event, delta, revertFunc) {
++            editUrl = event.updateUrl.replace('-end-', encodeURIComponent(event.end.format(jsonDateFormat)));
++            editUrl = editUrl.replace('-start-', '');
++            editUrl = editUrl.replace('-id-', encodeURIComponent(event.id));
++            $.ajax({
++                url: editUrl
++            });
++        },
++        eventDrop: function(event, delta, revertFunc) {
++            editUrl = event.updateUrl.replace('-start-', encodeURIComponent(event.start.format(jsonDateFormat)));
++            editUrl = editUrl.replace('-end-', encodeURIComponent(event.end.format(jsonDateFormat)));
++            editUrl = editUrl.replace('-id-', encodeURIComponent(event.id));
++            $.ajax({
++                url: editUrl
++            });
++        },
++        eventClick: function(event, element) {
++            window.location = event.viewUrl;
++        },
++        loading: function(bool) {
++            $('#loading').toggle(bool);
++        }
++    });
++
++
++
++
++    $(".selectorCheckbox").click(function() {
++        reloadFullCalendar();
++    });
++    $(".filterCheckbox").click(function() {
++
++        // Make sure responded / not resondend  filters are not checked
++        // at the same time
++        if ($(this).val() == '3') {
++            $(":checkbox[value=4][name='filter']").attr("checked", false);
++        }
++        if ($(this).val() == '4') {
++            $(":checkbox[value=3][name='filter']").attr("checked", false);
++        }
++        
++        reloadFullCalendar();
++    });
++
++});
++
++
++
++function reloadFullCalendar() {
++    fullCalendarSelector = "";
++    fullCalendarFilter = "";
++
++    $(".selectorCheckbox").each(function() {
++        if ($(this).prop( "checked" )) {
++            fullCalendarSelector += $(this).val() + ",";
++        }
++    });
++    $(".filterCheckbox").each(function() {
++        if ($(this).prop( "checked" )) {
++            fullCalendarFilter += $(this).val() + ",";
++        }
++    });
++
++    var events = {
++        url: fullCalendarLoadUrl,
++        type: 'GET',
++        data: {
++            selectors: fullCalendarSelector,
++            filters: fullCalendarFilter,
++        }
++    };
++
++    $('#calendar').fullCalendar('removeEventSource', events);
++    $('#calendar').fullCalendar('addEventSource', events);
++    $('#calendar').fullCalendar('refetchEvents');
++
++}
+\ No newline at end of file
+diff --git a/controllers/GlobalController.php b/controllers/GlobalController.php
+index e853087..0b957d5 100644
+--- a/controllers/GlobalController.php
++++ b/controllers/GlobalController.php
+@@ -66,15 +66,16 @@ class GlobalController extends Controller
+         $endDate = new \DateTime(Yii::$app->request->get('end'));
+         $selectors = explode(",", Yii::$app->request->get('selectors'));
+         $filters = explode(",", Yii::$app->request->get('filters'));
+-
++        $spaces = explode(",", Yii::$app->request->get('spaces'));
++        $year = Yii::$app->request->get('year');
+         Yii::$app->user->getIdentity()->setSetting('lastSelectors', Json::encode($selectors), 'calendar');
+         Yii::$app->user->getIdentity()->setSetting('lastFilters', Json::encode($filters), 'calendar');
+ 
+-        $entries = CalendarEntry::getEntriesByRange($startDate, $endDate, $selectors, $filters);
++        $entries = CalendarEntry::getEntriesByRange($startDate, $endDate, $selectors, $filters, $spaces,$year);
+ 
+         foreach ($entries as $entry) {
+             $output[] = $entry->getFullCalendarArray();
+-        }
++        }   
+ 
+         return $output;
+     }
+diff --git a/models/CalendarEntry.php b/models/CalendarEntry.php
+index b483beb..278e2ae 100644
+--- a/models/CalendarEntry.php
++++ b/models/CalendarEntry.php
+@@ -203,14 +203,13 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
+         return $entries;
+     }
+ 
+-    public static function getEntriesByRange(DateTime $start, DateTime $end, $includes = array(), $filters = array(), $limit = 0)
+-    {
++    public static function getEntriesByRange(DateTime $start, DateTime $end, $includes = array(), $filters = array(), $spaces = array(), $year = "", $limit = 0)
++    {  
+         // Limit Range to one month
+         $interval = $start->diff($end);
+         if ($interval->days > 50) {
+             throw new Exception('Range maximum exceeded!');
+         }
+-
+         $query = self::find();
+         $query->andWhere(['>=', 'start_datetime', $start->format('Y-m-d H:i:s')]);
+         $query->andWhere(['<=', 'end_datetime', $end->format('Y-m-d H:i:s')]);
+@@ -235,10 +234,20 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
+         if (in_array(self::FILTER_MINE, $filters)) {
+             $query->andWhere(['content.user_id' => Yii::$app->user->id]);
+         }
+-
++        if (in_array(self::FILTER_CLASS, $filters)) {
++            $query->andWhere(['content.user_id' => Yii::$app->user->id]);
++        }
+         if ($limit != 0) {
+             $query->limit($limit);
++        }   
++        if(count($spaces) > 1){
++             $query->andWhere(['space.name' => $spaces]);
++        }
++
++        if(!empty($year)) {
++            $query->andWhere(['like', 'space.name', $year]);
+         }
++        
+ 
+         $entries = array();
+         foreach ($query->all() as $entry) {
+diff --git a/views/global/index.php b/views/global/index.php
+index 92686fb..b79e8de 100644
+--- a/views/global/index.php
++++ b/views/global/index.php
+@@ -99,6 +99,37 @@ use yii\helpers\Url;
+                     </div>
+                 </div>
+             </div>
++
++            <div class="panel panel-default">
++
++                <div class="panel-heading">
++                    <?php echo Yii::t('CalendarModule.views_global_index', '<strong>Filter</strong> Spaces'); ?>
++                    
++                </div>
++
++                <div class="panel-body">
++                <div class="checkbox">
++                    
++                        <label>
++                            <select type="checkbox" name="filter" class="spacesSelect">
++                            <option value="" selected="selected">Classe</option>
++                            <?php for($i=5;$i<=12; $i++) { ?>        
++                            <option value="<?=$i?>"><?php echo Yii::t('CalendarModule.views_global_index', $i); ?></option>
++                            <?php } ?>
++                        </label>
++                      
++                </div>
++                </br>   
++                <?php foreach (CalendarEntry::getSpaces() as $value) { ?>
++                <div class="checkbox">
++                    <label>
++                        <input type="checkbox" name="filter" class="spacesCheckbox"  value="<?php echo trim($value['name']) ?>" checked="checked">
++                        <?php echo Yii::t('CalendarModule.views_global_index', $value['name']); ?>
++                    </label>
++                </div>
++                <?php } ?>
++                </div>
++            </div>
+         </div>
+ 
+     </div>
+-- 
+1.9.1
+
