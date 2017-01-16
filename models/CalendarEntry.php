@@ -203,14 +203,13 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
         return $entries;
     }
 
-    public static function getEntriesByRange(DateTime $start, DateTime $end, $includes = array(), $filters = array(), $limit = 0)
-    {
+    public static function getEntriesByRange(DateTime $start, DateTime $end, $includes = array(), $filters = array(), $spaces = array(), $year = "", $limit = 0)
+    {  
         // Limit Range to one month
         $interval = $start->diff($end);
         if ($interval->days > 50) {
             throw new Exception('Range maximum exceeded!');
         }
-
         $query = self::find();
         $query->andWhere(['>=', 'start_datetime', $start->format('Y-m-d H:i:s')]);
         $query->andWhere(['<=', 'end_datetime', $end->format('Y-m-d H:i:s')]);
@@ -235,10 +234,20 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
         if (in_array(self::FILTER_MINE, $filters)) {
             $query->andWhere(['content.user_id' => Yii::$app->user->id]);
         }
-
+        if (in_array(self::FILTER_CLASS, $filters)) {
+            $query->andWhere(['content.user_id' => Yii::$app->user->id]);
+        }
         if ($limit != 0) {
             $query->limit($limit);
+        }   
+        if(count($spaces) > 1){
+             $query->andWhere(['space.name' => $spaces]);
         }
+
+        if(!empty($year)) {
+            $query->andWhere(['like', 'space.name', $year]);
+        }
+        
 
         $entries = array();
         foreach ($query->all() as $entry) {

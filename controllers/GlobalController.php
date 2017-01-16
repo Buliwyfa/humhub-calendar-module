@@ -66,15 +66,16 @@ class GlobalController extends Controller
         $endDate = new \DateTime(Yii::$app->request->get('end'));
         $selectors = explode(",", Yii::$app->request->get('selectors'));
         $filters = explode(",", Yii::$app->request->get('filters'));
-
+        $spaces = explode(",", Yii::$app->request->get('spaces'));
+        $year = Yii::$app->request->get('year');
         Yii::$app->user->getIdentity()->setSetting('lastSelectors', Json::encode($selectors), 'calendar');
         Yii::$app->user->getIdentity()->setSetting('lastFilters', Json::encode($filters), 'calendar');
 
-        $entries = CalendarEntry::getEntriesByRange($startDate, $endDate, $selectors, $filters);
+        $entries = CalendarEntry::getEntriesByRange($startDate, $endDate, $selectors, $filters, $spaces,$year);
 
         foreach ($entries as $entry) {
             $output[] = $entry->getFullCalendarArray();
-        }
+        }   
 
         return $output;
     }

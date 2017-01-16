@@ -99,6 +99,37 @@ use yii\helpers\Url;
                     </div>
                 </div>
             </div>
+
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+                    <?php echo Yii::t('CalendarModule.views_global_index', '<strong>Filter</strong> Spaces'); ?>
+                    
+                </div>
+
+                <div class="panel-body">
+                <div class="checkbox">
+                    
+                        <label>
+                            <select type="checkbox" name="filter" class="spacesSelect">
+                            <option value="" selected="selected">Classe</option>
+                            <?php for($i=5;$i<=12; $i++) { ?>        
+                            <option value="<?=$i?>"><?php echo Yii::t('CalendarModule.views_global_index', $i); ?></option>
+                            <?php } ?>
+                        </label>
+                      
+                </div>
+                </br>   
+                <?php foreach (CalendarEntry::getSpaces() as $value) { ?>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="filter" class="spacesCheckbox"  value="<?php echo trim($value['name']) ?>" checked="checked">
+                        <?php echo Yii::t('CalendarModule.views_global_index', $value['name']); ?>
+                    </label>
+                </div>
+                <?php } ?>
+                </div>
+            </div>
         </div>
 
     </div>
