@@ -1,0 +1,23 @@
+<?php
+return array (
+  'Adds an calendar for private or public events to your profile and mainmenu.' => 'Añade un calendario para eventos privados o publicos a tu perfil y menu principal.',
+  'Adds an event calendar to this space.' => 'Añade un calendario de eventos a este espacio.',
+  'All Day' => 'Todo el día',
+  'Attending users' => 'Usuarios que asistirán',
+  'Calendar' => 'Calendario',
+  'Declining users' => 'Usuarios que no asistirán',
+  'Description' => 'Descripción',
+  'End Date' => 'Fecha de fin',
+  'End Time' => 'Hora Final',
+  'End time must be after start time!' => '¡La fecha de fin tiene que ser después de la fecha de inicio!',
+  'Event' => 'Evento',
+  'Event not found!' => '¡Evento no encontrado!',
+  'ID' => 'ID',
+  'Maybe attending users' => 'Usuarios que tal vez asistan',
+  'Participation Mode' => 'Modo de participación',
+  'Start Date' => 'Fecha de inicio',
+  'Start Time' => 'Hora de Inicio',
+  'Title' => 'Título',
+  'You don\'t have permission to delete this event!' => '¡No tienes permisos para borrar este evento!',
+  'You don\'t have permission to edit this event!' => '¡No tienes permisos para editar este evento!',
+);

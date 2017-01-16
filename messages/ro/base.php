@@ -1,0 +1,23 @@
+<?php
+return array (
+  'Adds an calendar for private or public events to your profile and mainmenu.' => 'Se adaugă un calendar pentru evenimente private sau publice pe profilul tău și pe meniul principal.',
+  'Adds an event calendar to this space.' => 'Se adaugă un calendar de evenimente pe acest spațiu.',
+  'All Day' => 'Toată Ziua',
+  'Attending users' => 'Utilizatori participanți',
+  'Calendar' => 'Calendar',
+  'Declining users' => 'Utilizatori neparticipanți',
+  'Description' => 'Descriere',
+  'End Date' => 'Data Scadentă',
+  'End Time' => 'Sfarsit',
+  'End time must be after start time!' => 'Timpul scadent trebuie să fie după timpul de început!',
+  'Event' => 'Eveniment',
+  'Event not found!' => 'Evenimentul nu a fost găsit!',
+  'ID' => 'ID',
+  'Maybe attending users' => 'Utilizatori care probabil vor participa',
+  'Participation Mode' => 'Mod de Participare',
+  'Start Date' => 'Data Începerii',
+  'Start Time' => 'Inceput',
+  'Title' => 'Titlul',
+  'You don\'t have permission to delete this event!' => 'Nu ai permisiunea să ștergi acest eveniment!',
+  'You don\'t have permission to edit this event!' => 'Nu ai permisiunea să editezi acest eveniment!',
+);
