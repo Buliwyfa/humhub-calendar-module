@@ -497,5 +497,12 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
             'description' => $this->description,
         );
     }
-
+    
+   public static function getSpaces(){
+        $spaces = (new \yii\db\Query())
+                    ->select("sm.id, sm.name")
+                    ->from('space_membership')
+                    ->leftJoin('space sm', 'sm.id=space_membership.space_id')->groupBy('sm.id')->all();
+        return $spaces;
+    }
 }
