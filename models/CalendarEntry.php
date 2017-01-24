@@ -53,7 +53,6 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
      */
     public $start_time;
     public $end_time;
-
     /**
      * Participation Modes
      */
@@ -69,6 +68,7 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
     const FILTER_NOT_RESPONDED = 3;
     const FILTER_RESPONDED = 4;
     const FILTER_MINE = 5;
+    const FILTER_CLASS = 6;
 
     public function init()
     {
@@ -368,7 +368,6 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
             $endDateTime->add(new DateInterval('PT2H'));
             $end = $endDateTime->format('Y-m-d');
         }
-
         return array(
             'id' => $this->id,
             'title' => $this->title,
@@ -378,6 +377,7 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
             'viewUrl' => $this->content->container->createUrl('/calendar/entry/view', array('id' => $this->id, 'fullCalendar' => '1')),
             'start' => Yii::$app->formatter->asDatetime($this->start_datetime, 'php:c'),
             'end' => $end,
+            'color' => $this->content->container['color'],
         );
     }
 
@@ -497,8 +497,8 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
             'description' => $this->description,
         );
     }
-    
-   public static function getSpaces(){
+
+    public static function getSpaces(){
         $spaces = (new \yii\db\Query())
                     ->select("sm.id, sm.name")
                     ->from('space_membership')

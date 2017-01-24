@@ -75,6 +75,9 @@ $(document).ready(function() {
     $(".spacesCheckbox").click(function() {
         reloadFullCalendar();
     });
+    $(".spacesSelect").change(function(){
+        reloadFullCalendar();
+    });
     $(".filterCheckbox").click(function() {
 
         // Make sure responded / not resondend  filters are not checked
@@ -108,11 +111,12 @@ function reloadFullCalendar() {
             fullCalendarFilter += $(this).val() + ",";
         }
     });
-     $(".spacesCheckbox").each(function() {
+    $(".spacesCheckbox").each(function() {
         if ($(this).prop( "checked" )) {
             fullCalendarSpaces += $(this).val() + ",";
         }
     });
+    fullCalendarYear = $(".spacesSelect").val();
     var events = {
         url: fullCalendarLoadUrl,
         type: 'GET',
@@ -120,11 +124,11 @@ function reloadFullCalendar() {
             selectors: fullCalendarSelector,
             filters: fullCalendarFilter,
             spaces: fullCalendarSpaces,
+            year: fullCalendarYear,
         }
     };
 
     $('#calendar').fullCalendar('removeEventSource', events);
     $('#calendar').fullCalendar('addEventSource', events);
     $('#calendar').fullCalendar('refetchEvents');
-
 }
