@@ -71,9 +71,9 @@ class EntryController extends ContentContainerController
         $calendarEntry = $this->getCalendarEntry(Yii::$app->request->get('id'));
 
         if ($calendarEntry == null) {
-            if (!$this->contentContainer->permissionManager->can(new \humhub\modules\calendar\permissions\CreateEntry())) {
-                throw new HttpException(403, 'No permission to add new entries');
-            }
+                // if (!$this->contentContainer->permissionManager->can(new \humhub\modules\calendar\permissions\CreateEntry())) {
+                //     throw new HttpException(403, 'No permission to add new entries');
+                // }
 
             $calendarEntry = new CalendarEntry;
             $calendarEntry->content->container = $this->contentContainer;
