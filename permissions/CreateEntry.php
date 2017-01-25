@@ -25,7 +25,6 @@ class CreateEntry extends \humhub\libs\BasePermission
         Space::USERGROUP_ADMIN,
         Space::USERGROUP_MODERATOR,
         Space::USERGROUP_MEMBER,
-        User::USERGROUP_SELF
     ];
 
     /**
@@ -33,10 +32,6 @@ class CreateEntry extends \humhub\libs\BasePermission
      */
     protected $fixedGroups = [
         Space::USERGROUP_USER,
-        User::USERGROUP_FRIEND,
-        User::USERGROUP_GUEST,
-        User::USERGROUP_USER,
-        User::USERGROUP_FRIEND,
     ];
 
     /**
