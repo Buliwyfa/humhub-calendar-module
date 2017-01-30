@@ -502,7 +502,7 @@ class CalendarEntry extends ContentActiveRecord implements \humhub\modules\searc
         $spaces = (new \yii\db\Query())
                     ->select("sm.id, sm.name")
                     ->from('space_membership')
-                    ->leftJoin('space sm', 'sm.id=space_membership.space_id')->groupBy('sm.id')->all();
+                    ->leftJoin('space sm', 'sm.id=space_membership.space_id')->groupBy('sm.id')->orderBy('sm.name')->all();
         return $spaces;
     }
 }
