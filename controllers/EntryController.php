@@ -81,9 +81,9 @@ class EntryController extends ContentContainerController
             if (Yii::$app->request->get('fullCalendar') == 1) {
                 \humhub\modules\calendar\widgets\FullCalendar::populate($calendarEntry, Yii::$app->timeZone);
             }
-        } elseif (!$calendarEntry->content->canEdit()) {
-            throw new HttpException(403, 'No permission to edit this entry');
-        }
+         // } elseif (!$calendarEntry->content->canEdit()) {
+         //     throw new HttpException(403, 'No permission to edit this entry');
+         }
 
 
         if ($calendarEntry->all_day) {
